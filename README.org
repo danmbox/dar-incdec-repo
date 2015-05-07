@@ -1,0 +1,77 @@
+#+TITLE: dar-incdec-repo
+#+OPTIONS: toc:nil
+
+/Convention-over-configuration DAR backups/
+
+#  * Home page :: [[http://danmbox.github.io/dar-incdec-repo]]
+  * Downloads :: [[https://github.com/danmbox/dar-incdec-repo][github]]
+  * Author :: [[http://alumnus.caltech.edu/~muresan/][Dan A. Muresan]] (danmbox at gmail dot com)
+
+* DESCRIPTION
+
+#+BEGIN_EXAMPLE
+.-------------------.      .-------------.
+| daily incremental |      |   weekly    |
+| 001.00@007.00-inc |      | decremental |
+|-------------------|      | 007.00-dec  |
+| etc-T9@T7         |--.   |-------------|
+| www-T9@T7         |  '-->| etc-T7      |<--.
+|                   |      | www-T7      |   |
+| etc-T8@T7         |      |             |   |
+| www-T8@T7         |  .-->| etc-T0@T7   |---'
+| ...               |  |   | www-T0@T7   |
+| etc-T3@T0         |--'   '-------------'
+| www-T3@T0         |
+'-------------------'
+#+END_EXAMPLE
+
+A =dar-incdec= repository (see =example_repo= in the distribution)
+consists of several folders, each corresponding to a backup interval
+(e.g. daily, weekly). Each interval folder contains multiple rules
+(e.g. back up =/etc=, =/var/www=). Each rule generates a backup series
+composed of multiple snapshots, distinguished by different suffixes
+(timestamps).
+
+The name of interval folders should contain an interval (in days,
+possibly with decimals), an optional reference-interval specification
+(for incremental backups), and the backup mode (=-inc= or =-dec=). For
+example,
++ =001.00@007-inc= is a daily incremental backup on top of the latest
+  weekly snapshot (there should be a corresponding =007-*= directory).
++ =000.50-inc= is a twice-daily "traditional" incremental backup (each
+  snapshot is on top of the previous snapshot); if not specified, the
+  reference interval (folder) defaults to the current interval.
++ =007-dec= is a weekly decremental backup. The latest backup is
+  always full, and all others are "decremental" with respect to
+  their immediate successor.
+
+Backup rules are stored in a =.backups= subdirectory in each interval
+folder. Rules should be files with names like =prefix[@ref].cfg=,
+where =prefix= can contain alphanumeric characters and underscores
+(each prefix corresponds to a backup series). Rules can be symlinks
+and can be shared between the various interval directories. The
+optional =@ref= overrides the interval-wide reference directory, but
+to you shouldn't normally need this feature.
+
+Each rule file contains =dar= arguments (the tree root =-R=, several
+=-g= paths), possibly preceded by =--defaults== (which enables
+compression, except for some well-known non-compressible
+extensions). Do not include any =dar= flags related to incremental /
+decremental backup, as =dar-incdec-repo= adds these automatically.
+
+* RUNNING
+
+=darincdec_repo.py backup /path/to/repo=
+
+See =example_repo= in the distribution for a sample repository.
+
+There is an auxiliary lower-level utility, =darincdec_snapshot=, which
+creates snapshots for a given series (prefix), operating within a single
+interval directory. Both utilities can be invoked with =--help= to
+learn more.
+
+* COPYRIGHT
+
+  Copyright 2015 Dan A. Muresan
+
+  See LICENSE.txt for licensing information.
