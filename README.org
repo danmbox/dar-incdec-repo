@@ -1,9 +1,9 @@
 #+TITLE: dar-incdec-repo
 #+OPTIONS: toc:nil
 
-/Convention-over-configuration DAR backups/
+/Convention-over-configuration framework for DAR backups/
 
-#  * Home page :: [[http://danmbox.github.io/dar-incdec-repo]]
+  * Home page :: [[http://danmbox.github.io/dar-incdec-repo]]
   * Downloads :: [[https://github.com/danmbox/dar-incdec-repo][github]]
   * Author :: [[http://alumnus.caltech.edu/~muresan/][Dan A. Muresan]] (danmbox at gmail dot com)
 
