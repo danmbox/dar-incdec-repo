@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <title>Dar-incdec-repo by danmbox</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Dar-incdec-repo</h1>
+        <h2></h2>
+
+        <section id="downloads">
+          <a href="https://github.com/danmbox/dar-incdec-repo/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/danmbox/dar-incdec-repo/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/danmbox/dar-incdec-repo" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <p><em>Convention-over-configuration DAR backups</em></p>
+
+<ul>
+<li>  <strong>Home page:</strong> <a href="http://danmbox.github.io/dar-incdec-repo">http://danmbox.github.io/dar-incdec-repo</a>
+</li>
+<li>  <strong>Downloads:</strong> <a href="https://github.com/danmbox/dar-incdec-repo">github</a>
+</li>
+<li>  <strong>Author:</strong> <a href="http://alumnus.caltech.edu/%7Emuresan/">Dan A. Muresan</a> (danmbox at gmail dot com)</li>
+</ul>
+
+<h1>
+<a id="description" class="anchor" href="#description" aria-hidden="true"><span class="octicon octicon-link"></span></a>DESCRIPTION</h1>
+
+<pre><code>.-------------------.      .-------------.
+| daily incremental |      |   weekly    |
+| 001.00@007.00-inc |      | decremental |
+|-------------------|      | 007.00-dec  |
+| etc-T9@T7         |--.   |-------------|
+| www-T9@T7         |  '--&gt;| etc-T7      |&lt;--.
+|                   |      | www-T7      |   |
+| etc-T8@T7         |      |             |   |
+| www-T8@T7         |  .--&gt;| etc-T0@T7   |---'
+| ...               |  |   | www-T0@T7   |
+| etc-T3@T0         |--'   '-------------'
+| www-T3@T0         |
+'-------------------'
+</code></pre>
+
+<p>A <code>dar-incdec</code> repository (see <code>example_repo</code> in the distribution)
+consists of several folders, each corresponding to a backup interval
+(e.g. daily, weekly). Each interval folder contains multiple rules
+(e.g. back up <code>/etc</code>, <code>/var/www</code>). Each rule generates a backup series
+composed of multiple snapshots, distinguished by different suffixes
+(timestamps).</p>
+
+<p>The name of interval folders should contain an interval (in days,
+possibly with decimals), an optional reference-interval specification
+(for incremental backups), and the backup mode (<code>-inc</code> or <code>-dec</code>). For
+example,</p>
+
+<ul>
+<li>  <code>001.00@007-inc</code> is a daily incremental backup on top of the latest
+weekly snapshot (there should be a corresponding <code>007-*</code> directory).</li>
+<li>  <code>000.50-inc</code> is a twice-daily "traditional" incremental backup (each
+snapshot is on top of the previous snapshot); if not specified, the
+reference interval (folder) defaults to the current interval.</li>
+<li>  <code>007-dec</code> is a weekly decremental backup. The latest backup is
+always full, and all others are "decremental" with respect to
+their immediate successor.</li>
+</ul>
+
+<p>Backup rules are stored in a <code>.backups</code> subdirectory in each interval
+folder. Rules should be files with names like <code>prefix[@ref].cfg</code>,
+where <code>prefix</code> can contain alphanumeric characters and underscores
+(each prefix corresponds to a backup series). Rules can be symlinks
+and can be shared between the various interval directories. The
+optional <code>@ref</code> overrides the interval-wide reference directory, but
+to you shouldn't normally need this feature.</p>
+
+<p>Each rule file contains <code>dar</code> arguments (the tree root <code>-R</code>, several
+<code>-g</code> paths), possibly preceded by <code>--defaults=</code> (which enables
+compression, except for some well-known non-compressible
+extensions). Do not include any <code>dar</code> flags related to incremental /
+decremental backup, as <code>dar-incdec-repo</code> adds these automatically.</p>
+
+<h1>
+<a id="running" class="anchor" href="#running" aria-hidden="true"><span class="octicon octicon-link"></span></a>RUNNING</h1>
+
+<p><code>darincdec_repo.py backup /path/to/repo</code></p>
+
+<p>See <code>example_repo</code> in the distribution for a sample repository.</p>
+
+<p>There is an auxiliary lower-level utility, <code>darincdec_snapshot</code>, which
+creates snapshots for a given series (prefix), operating within a single
+interval directory. Both utilities can be invoked with <code>--help</code> to
+learn more.</p>
+
+<h1>
+<a id="copyright" class="anchor" href="#copyright" aria-hidden="true"><span class="octicon octicon-link"></span></a>COPYRIGHT</h1>
+
+<p>Copyright 2015 Dan A. Muresan</p>
+
+<p>See LICENSE.txt for licensing information.</p>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
