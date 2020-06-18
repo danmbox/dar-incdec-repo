@@ -74,10 +74,10 @@ def cmdline (args):
     call_dar (["-c", fullpath] + opts.dar_args)
     if refpath is not None:
       decpath = refpath  + "@" + opts.suffix
-      call_dar (["-+", decpath, "-A", refpath, "-@", fullpath, "-ad", "-ak", "-w"])
-      call_dar (["-t", decpath])
-      for f in glob.glob (refpath + DAR_GLOB_SFX): os.unlink (f)
-      for f in glob.glob (fullpath + DAR_GLOB_SFX): touch (f)
+      call_dar (["-+", decpath, "-A", refpath, "-@", fullpath, "-ad", "-ak", "-w"])  # clobber; alter: keep compressed, decremental
+      call_dar (["-t", decpath])  # test
+      for f in glob.glob (refpath + DAR_GLOB_SFX): os.unlink (f)  # old decremental, now replaced
+      for f in glob.glob (fullpath + DAR_GLOB_SFX): touch (f)  # top-of-stack must be newer than just-created decremental
 
 if __name__ == "__main__":
   cmdline (sys.argv [1:])
