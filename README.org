@@ -1,7 +1,11 @@
 #+TITLE: dar-incdec-repo
+#+SUBTITLE: Convention-over-configuration framework for DAR backups
+#+AUTHOR: Dan A. Muresan
+#+LANGUAGE: en
+#+LANG: en
 #+OPTIONS: toc:nil
 
-/Convention-over-configuration framework for DAR backups/
+* ABOUT
 
   * Home page :: [[http://danmbox.github.io/dar-incdec-repo]]
   * Downloads :: [[https://github.com/danmbox/dar-incdec-repo][github]]
@@ -54,14 +58,14 @@ optional =@ref= overrides the interval-wide reference directory, but
 to you shouldn't normally need this feature.
 
 Each rule file contains =dar= arguments (the tree root =-R=, several
-=-g= paths), possibly preceded by =--defaults== (which enables
+=-g= paths), possibly preceded by =--defaults= (which enables
 compression, except for some well-known non-compressible
 extensions). Do not include any =dar= flags related to incremental /
 decremental backup, as =dar-incdec-repo= adds these automatically.
 
 * RUNNING
 
-=darincdec_repo.py backup /path/to/repo=
+src_sh{darincdec_repo.py backup /path/to/repo}
 
 See =example_repo= in the distribution for a sample repository.
 
@@ -69,6 +73,25 @@ There is an auxiliary lower-level utility, =darincdec_snapshot=, which
 creates snapshots for a given series (prefix), operating within a single
 interval directory. Both utilities can be invoked with =--help= to
 learn more.
+
+* RESTORING
+
+Recreate the most recent decremental snapshot before the desired restoration
+date by repeatedly rewinding:
+
+#+BEGIN_SRC sh
+dar -ak -+ eg-20150417_221755_889569 \
+-A ./000.0010-dec/eg-20150418_004053_227793 \
+-@ ./000.0010-dec/eg-20150417_221755_889569@20150418_004053_227793
+#+END_SRC
+
+Then, using the same syntax, apply (=-A=) the incremental snapshot
+closest to the target date on top of (=-@=) the re-created decremental
+(fast-forward). Finally, use =-x= to unpack.
+
+If you can find the most recent snapshot containing the desired files,
+you can unpack that directly, as modified files are always stored fully
+(not as patches).
 
 * COPYRIGHT
 
